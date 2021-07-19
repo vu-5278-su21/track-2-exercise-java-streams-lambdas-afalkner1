@@ -38,7 +38,10 @@ public class StreamUtils {
         // 3. List.subLIst will be useful to you
         // 4. A windowSize < 1 should return an empty stream
 
-        return Stream.empty();
+    	return (windowSize > 0) ?
+                IntStream.rangeClosed(0, data.size() - windowSize)
+                .mapToObj(i -> data.subList(i, i + windowSize)) :
+                Stream.empty();
     }
 
     /**
@@ -65,11 +68,16 @@ public class StreamUtils {
      * @return
      */
     public static <T> Function<List<T>, Double> averageOfProperty(ToDoubleFunction<T> f){
-        return (List<T> window) -> {
-            // You need to update this code here to
-            // return the average of the property that
-            // is extracted with the function `f`
-            return 0.0;
+//        return (List<T> window) -> {
+//            // You need to update this code here to
+//            // return the average of the property that
+//            // is extracted with the function `f`
+//            return 0.0;
+//        };
+    	return (List<T> window) -> {
+            return window.stream()
+                    .mapToDouble(f)
+                    .average().getAsDouble();
         };
     }
 
