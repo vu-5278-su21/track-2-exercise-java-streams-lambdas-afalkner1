@@ -35,29 +35,57 @@ public class BikeStats {
      * each window by averaging the grade, altitude, velocity, and heart
      * rate for the 3 DataFrame objects.
      *
-     * For each window, you should use the coordinate of the first DataFrame in the window
+     * You should use the coordinate of the first DataFrame in the window
      * for the location.
      *
      * @param windowSize
      * @return
      */
     public Stream<BikeRide.DataFrame> averagedDataFrameStream(int windowSize){
-        return Stream.empty();
+
+    	// Stream of data frames 
+    	
+    	Stream<BikeRide.DataFrame> dataStream = ride.fusedFramesStream();
+    	
+    	// Turn stream into list 
+    	
+    	List<BikeRide.DataFrame> dataList = dataStream.collect(Collectors.toList());
+    	
+
+        return StreamUtils.slidingWindow(dataList, windowSize)
+                .map(i ->
+                        new BikeRide.DataFrame(
+                                i.get(0).coordinate,
+                                StreamUtils.averageOfProperty(BikeRide.DataFrame::getGrade).apply(i),
+                                StreamUtils.averageOfProperty(BikeRide.DataFrame::getAltitude).apply(i),
+                                StreamUtils.averageOfProperty(BikeRide.DataFrame::getVelocity).apply(i),
+                                StreamUtils.averageOfProperty(BikeRide.DataFrame::getHeartRate).apply(i))
+                        );
     }
 
     // @ToDo:
     //
-    // Determine the stream of unique locations that the
+    // Determine the number of unique locations that the
     // rider stopped. A location is unique if there are no
     // other stops at the same latitude / longitude.
-    // The rider is stopped if velocity = 0.
+    // Print out the location of each stop.
     //
     // For the purposes of this assignment, you should use
     // LatLng.equals() to determine if two locations are
     // the same.
     //
     public Stream<LatLng> locationsOfStops() {
-        return Stream.empty();
+    	
+    	//filter data to ones where rider stopped (velocity == 0) 
+    	
+    	Stream<BikeRide.DataFrame> stopLocations = ride.fusedFramesStream()
+    			.filter(i -> i.velocity == 0);
+    	
+    	//create a stream of those coordinates with distinct values
+    	Stream<BikeRide.LatLng> distinctLoc = stopLocations.map(BikeRide.DataFrame::getCoordinate).distinct();
+    			
+    			
+        return distinctLoc;
     }
 
 }

@@ -121,20 +121,16 @@ public class BikeRide {
     //
     // Implement this method so it returns a
     // stream of the specified values
-    //
-    // Hint: see Arrays.stream(...)
-    //
     public DoubleStream heartRateStream() {
-        return DoubleStream.empty();
+        return Arrays.stream(heartRate);
     }
 
     // @ToDo:
     //
     // Implement this method so it returns a
     // stream of the specified values
-    //
     public DoubleStream velocityStream() {
-        return DoubleStream.empty();
+        return Arrays.stream(velocity);
     }
 
     // @ToDo:
@@ -142,7 +138,7 @@ public class BikeRide {
     // Implement this method so it returns a
     // stream of the specified values
     public DoubleStream gradeStream() {
-        return DoubleStream.empty();
+        return Arrays.stream(grade);
     }
 
     // @ToDo:
@@ -150,7 +146,7 @@ public class BikeRide {
     // Implement this method so it returns a
     // stream of the specified values
     public DoubleStream altitudeStream() {
-        return DoubleStream.empty();
+        return Arrays.stream(altitude);
     }
 
     // @ToDo:
@@ -158,7 +154,7 @@ public class BikeRide {
     // Implement this method so it returns a
     // stream of the specified values
     public Stream<LatLng> coordinateStream() {
-        return Stream.empty();
+        return Arrays.stream(coordinates);
     }
 
 
@@ -171,13 +167,22 @@ public class BikeRide {
     // data arrays (e.g., heartRate, velocity, etc.)
     //
     public Stream<DataFrame> fusedFramesStream() {
-        return Stream.empty();
+    	DataFrame[] dataArray = new DataFrame[grade.length];
+    	
+    	DataFrame temp = null;
+    	for( int i = 0; i < grade.length; i++) {
+    		temp = new DataFrame(coordinates[i]
+    				, grade[i]
+    				, altitude[i]
+    						, velocity[i]
+    								, heartRate[i]);
+    		dataArray[i] = temp;
+    	}
+    	
+        return Arrays.stream(dataArray);
     }
 
 
-    // Don't change me!
-    //
-    // There is nothing to see here, move along.
     @JsonAnySetter
     public void setOther(String key, Object v) {
     }
