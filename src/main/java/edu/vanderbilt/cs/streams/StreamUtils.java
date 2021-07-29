@@ -37,11 +37,17 @@ public class StreamUtils {
         // 2. Think of how you could use IntStream.range()
         // 3. List.subLIst will be useful to you
         // 4. A windowSize < 1 should return an empty stream
-
-    	return (windowSize > 0) ?
-                IntStream.rangeClosed(0, data.size() - windowSize)
-                .mapToObj(i -> data.subList(i, i + windowSize)) :
-                Stream.empty();
+    	
+    	if (windowSize < 1) {
+    		return Stream.empty();
+    	}
+    	else {
+    		
+    		return IntStream.range(0, data.size() - windowSize +1 )
+    				.mapToObj(i -> data.subList(i, i + windowSize));
+    		
+    	}
+    	
     }
 
     /**
@@ -59,24 +65,14 @@ public class StreamUtils {
      * of objects using the provided property function to extract a property
      * value for each object.
      *
-     * You should look at StreamUtilsTest.testAverageOfProperty() to better
-     * understand what this needs to do.
-     *
      *
      * @param f
      * @param <T>
      * @return
      */
     public static <T> Function<List<T>, Double> averageOfProperty(ToDoubleFunction<T> f){
-//        return (List<T> window) -> {
-//            // You need to update this code here to
-//            // return the average of the property that
-//            // is extracted with the function `f`
-//            return 0.0;
-//        };
-    	return (List<T> window) -> {
-            return window.stream()
-                    .mapToDouble(f)
+        return (List<T> window) -> {
+            return window.stream().mapToDouble(f)
                     .average().getAsDouble();
         };
     }

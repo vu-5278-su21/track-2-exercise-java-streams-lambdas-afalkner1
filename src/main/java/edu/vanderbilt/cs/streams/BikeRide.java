@@ -121,20 +121,16 @@ public class BikeRide {
     //
     // Implement this method so it returns a
     // stream of the specified values
-    //
-    // Hint: see Arrays.stream(...)
-    //
     public DoubleStream heartRateStream() {
-    	return Arrays.stream(heartRate);
+        return Arrays.stream(heartRate);
     }
 
     // @ToDo:
     //
     // Implement this method so it returns a
     // stream of the specified values
-    //
     public DoubleStream velocityStream() {
-    	return Arrays.stream(velocity);
+        return Arrays.stream(velocity);
     }
 
     // @ToDo:
@@ -142,7 +138,7 @@ public class BikeRide {
     // Implement this method so it returns a
     // stream of the specified values
     public DoubleStream gradeStream() {
-    	return Arrays.stream(grade);
+        return Arrays.stream(grade);
     }
 
     // @ToDo:
@@ -150,7 +146,7 @@ public class BikeRide {
     // Implement this method so it returns a
     // stream of the specified values
     public DoubleStream altitudeStream() {
-    	return Arrays.stream(altitude);
+        return Arrays.stream(altitude);
     }
 
     // @ToDo:
@@ -158,7 +154,7 @@ public class BikeRide {
     // Implement this method so it returns a
     // stream of the specified values
     public Stream<LatLng> coordinateStream() {
-    	return Arrays.stream(coordinates);
+        return Arrays.stream(coordinates);
     }
 
 
@@ -171,19 +167,22 @@ public class BikeRide {
     // data arrays (e.g., heartRate, velocity, etc.)
     //
     public Stream<DataFrame> fusedFramesStream() {
-    	return IntStream.range(0, coordinates.length)
-                .mapToObj(i ->
-                        new DataFrame(coordinates[i],
-                                grade[i],
-                                altitude[i],
-                                velocity[i],
-                                heartRate[i]));
+    	DataFrame[] dataArray = new DataFrame[grade.length];
+    	
+    	DataFrame temp = null;
+    	for( int i = 0; i < grade.length; i++) {
+    		temp = new DataFrame(coordinates[i]
+    				, grade[i]
+    				, altitude[i]
+    						, velocity[i]
+    								, heartRate[i]);
+    		dataArray[i] = temp;
+    	}
+    	
+        return Arrays.stream(dataArray);
     }
 
 
-    // Don't change me!
-    //
-    // There is nothing to see here, move along.
     @JsonAnySetter
     public void setOther(String key, Object v) {
     }
